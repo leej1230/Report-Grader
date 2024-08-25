@@ -13,13 +13,110 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="submodules">
+      <UniqueIdentifier>{ee4c241a-5a8b-40d1-acc9-e7cd75b8557c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="submodules\imGui">
+      <UniqueIdentifier>{1967159d-af06-4607-998c-1ddd0cd1866e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="submodules\imGui\backends">
+      <UniqueIdentifier>{3662b0c6-a90e-4c7f-a05b-1b24ca2449ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="submodules\imGui\.editorconfig">
+      <Filter>submodules\imGui</Filter>
+    </None>
+    <None Include="submodules\imGui\.gitattributes">
+      <Filter>submodules\imGui</Filter>
+    </None>
+    <None Include="submodules\imGui\.gitignore">
+      <Filter>submodules\imGui</Filter>
+    </None>
+    <None Include="submodules\imGui\backends\imgui_impl_metal.mm">
+      <Filter>submodules\imGui\backends</Filter>
+    </None>
+    <None Include="submodules\imGui\backends\imgui_impl_osx.mm">
+      <Filter>submodules\imGui\backends</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="submodules\imGui\imgui.cpp">
+      <Filter>submodules\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="submodules\imGui\imgui_demo.cpp">
+      <Filter>submodules\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="submodules\imGui\imgui_draw.cpp">
+      <Filter>submodules\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="submodules\imGui\imgui_tables.cpp">
+      <Filter>submodules\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="submodules\imGui\imgui_widgets.cpp">
+      <Filter>submodules\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="submodules\imGui\backends\imgui_impl_glfw.cpp">
+      <Filter>submodules\imGui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="submodules\imGui\backends\imgui_impl_opengl2.cpp">
+      <Filter>submodules\imGui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="submodules\imGui\backends\imgui_impl_opengl3.cpp">
+      <Filter>submodules\imGui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="submodules\imGui\backends\imgui_impl_win32.cpp">
+      <Filter>submodules\imGui\backends</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="submodules\imGui\imconfig.h">
+      <Filter>submodules\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="submodules\imGui\imgui.h">
+      <Filter>submodules\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="submodules\imGui\imgui_internal.h">
+      <Filter>submodules\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="submodules\imGui\imstb_rectpack.h">
+      <Filter>submodules\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="submodules\imGui\imstb_textedit.h">
+      <Filter>submodules\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="submodules\imGui\imstb_truetype.h">
+      <Filter>submodules\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="submodules\imGui\backends\imgui_impl_glfw.h">
+      <Filter>submodules\imGui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="submodules\imGui\backends\imgui_impl_metal.h">
+      <Filter>submodules\imGui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="submodules\imGui\backends\imgui_impl_opengl2.h">
+      <Filter>submodules\imGui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="submodules\imGui\backends\imgui_impl_opengl3.h">
+      <Filter>submodules\imGui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="submodules\imGui\backends\imgui_impl_opengl3_loader.h">
+      <Filter>submodules\imGui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="submodules\imGui\backends\imgui_impl_osx.h">
+      <Filter>submodules\imGui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="submodules\imGui\backends\imgui_impl_win32.h">
+      <Filter>submodules\imGui\backends</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="submodules\imGui\LICENSE.txt">
+      <Filter>submodules\imGui</Filter>
+    </Text>
   </ItemGroup>
 </Project>

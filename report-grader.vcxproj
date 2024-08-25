@@ -72,7 +72,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)submodules\imGui;$(ProjectDir)submodules\imGui\backends;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)submodules\imGui;$(ProjectDir)submodules\imGui\backends;$(ProjectDir)submodules\imGui\examples\libs\glfw\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -108,10 +108,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)submodules\imGui;$(ProjectDir)submodules\imGui\backends;$(ProjectDir)submodules\imGui\examples\libs\glfw\include;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)submodules\imGui\examples\libs\glfw\lib-vc2010-64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>msvcrt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -132,9 +136,41 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="submodules\imGui\.editorconfig" />
+    <None Include="submodules\imGui\.gitattributes" />
+    <None Include="submodules\imGui\.gitignore" />
+    <None Include="submodules\imGui\backends\imgui_impl_metal.mm" />
+    <None Include="submodules\imGui\backends\imgui_impl_osx.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="submodules\imGui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="submodules\imGui\backends\imgui_impl_opengl2.cpp" />
+    <ClCompile Include="submodules\imGui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="submodules\imGui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="submodules\imGui\imgui.cpp" />
+    <ClCompile Include="submodules\imGui\imgui_demo.cpp" />
+    <ClCompile Include="submodules\imGui\imgui_draw.cpp" />
+    <ClCompile Include="submodules\imGui\imgui_tables.cpp" />
+    <ClCompile Include="submodules\imGui\imgui_widgets.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="submodules\imGui\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="submodules\imGui\backends\imgui_impl_metal.h" />
+    <ClInclude Include="submodules\imGui\backends\imgui_impl_opengl2.h" />
+    <ClInclude Include="submodules\imGui\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="submodules\imGui\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="submodules\imGui\backends\imgui_impl_osx.h" />
+    <ClInclude Include="submodules\imGui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="submodules\imGui\imconfig.h" />
+    <ClInclude Include="submodules\imGui\imgui.h" />
+    <ClInclude Include="submodules\imGui\imgui_internal.h" />
+    <ClInclude Include="submodules\imGui\imstb_rectpack.h" />
+    <ClInclude Include="submodules\imGui\imstb_textedit.h" />
+    <ClInclude Include="submodules\imGui\imstb_truetype.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="submodules\imGui\LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
