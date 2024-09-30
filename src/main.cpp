@@ -7,9 +7,16 @@
 // - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
 // - Introduction, links and more at the top of imgui.cpp
 
+#include "Class/PDFManager.h"
+#include <filesystem>
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "lodepng.h"
+#include "Class/PDFPage/PDFPage.h"
+#include "Class/MainControl/MainControl.h"
+#include "nfd.h"
+
 #include <stdio.h>
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -28,10 +35,32 @@
 #ifdef __EMSCRIPTEN__
 #include "../libs/emscripten/emscripten_mainloop_stub.h"
 #endif
+#include <iostream>
 
 static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
+}
+
+// ÉeÉNÉXÉ`ÉÉÇÉÅÉÇÉäÇ…ìoò^
+bool LoadTextureFromMemory(std::vector<uint8_t> vec, GLuint* out_texture, int image_width, int image_height)
+{
+    // Create a OpenGL texture identifier
+    GLuint image_texture;
+    glGenTextures(1, &image_texture);
+    glBindTexture(GL_TEXTURE_2D, image_texture);
+
+    // Setup filtering parameters for display
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Upload pixels into texture
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, vec.data());
+
+    *out_texture = image_texture;
+
+    return true;
 }
 
 // Main code
@@ -103,13 +132,42 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
-    //IM_ASSERT(font != nullptr);
+    ImWchar const ranges[] = { 0x0020, 0xfffd, 0, };
+    ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\meiryo.ttc", 16.0f, nullptr, ranges);
+    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\Arial.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+	io.Fonts->Build();
+    IM_ASSERT(font != nullptr);
 
     // Our state
     bool show_demo_window = true;
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+    // Initialize PDF Loader
+    //FPDF_LIBRARY_CONFIG config;
+    //config.version = 3;
+    //config.m_pUserFontPaths = NULL;
+    //config.m_pIsolate = NULL;
+    //config.m_v8EmbedderSlot = 0;
+    //config.m_pPlatform = NULL;
+    //config.m_pUserFontPaths = NULL;
+    //FPDF_InitLibraryWithConfig(&config);
+	FPDF_InitLibrary();
+	MainControl* mainControl = new MainControl();
+
+    PDFManager m_pdfManager;
+    m_pdfManager.LoadPDFFromStringPath("");
+	std::vector<PDFPage> pdfPages = m_pdfManager.GetPagePreview();
+	std::vector<GLuint> textureIDs;
+	for (auto& pdfPage : pdfPages) {
+		GLuint textureID = 0;
+		GLsizei pageWidth = pdfPage.GetPageWidth();
+		GLsizei pageHeight = pdfPage.GetPageHeight();
+		LoadTextureFromMemory(pdfPage.GetPageBuffer(), &textureID, pageWidth, pageHeight);
+		textureIDs.push_back(textureID);
+	}
+
+    float zoomScale = 1.0f;
 
     // Main loop
 #ifdef __EMSCRIPTEN__
@@ -121,11 +179,14 @@ int main(int, char**)
     while (!glfwWindowShouldClose(window))
 #endif
     {
+
         // Poll and handle events (inputs, window resize, etc.)
         // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
         // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
         // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
         // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
+        //io.WantCaptureKeyboard = true;
+
         glfwPollEvents();
 
         // Start the Dear ImGui frame
@@ -134,10 +195,13 @@ int main(int, char**)
         ImGui::NewFrame();
 
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
+        //if (show_demo_window)
+        //    ImGui::ShowDemoWindow(&show_demo_window);
 
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+        // Control Panel
+		// Show control
+        mainControl->Draw();
+        /*
         {
             static float f = 0.0f;
             static int counter = 0;
@@ -159,14 +223,27 @@ int main(int, char**)
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
         }
+        */
 
-        // 3. Show another simple window.
-        if (show_another_window)
+        // Student List
+        // Show table to select pdfs
+
+
+        // PDF Viewer
+        // Show pdf
         {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
+            ImGui::Begin("PDF Preview");
+			ImGui::SliderFloat("Scale", &zoomScale, 0.5f, 2.0f);
+
+            //ImGui::Text("pointer = %x", textureID);
+            //ImGui::Text("size = %d x %d", pageWidth, pageHeight);
+			ImGui::BeginChild("PDF Preview", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
+            int pageCount = pdfPages.size();
+            for(int i=0; i<pageCount; ++i){
+				ImGui::Image((void*)(intptr_t)textureIDs[i], ImVec2(pdfPages[i].GetPageWidth()*zoomScale, pdfPages[i].GetPageHeight()*zoomScale));
+			}
+			ImGui::EndChild();
+
             ImGui::End();
         }
 
@@ -189,6 +266,8 @@ int main(int, char**)
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+
+    FPDF_DestroyLibrary();
 
     glfwDestroyWindow(window);
     glfwTerminate();

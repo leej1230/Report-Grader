@@ -5,10 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -21,6 +17,27 @@
     </Filter>
     <Filter Include="submodules\imGui\backends">
       <UniqueIdentifier>{3662b0c6-a90e-4c7f-a05b-1b24ca2449ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Class">
+      <UniqueIdentifier>{a7b0840b-8660-4516-afd3-0d5e261a49b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Class\PDFPage">
+      <UniqueIdentifier>{32395db3-becb-444a-b14d-245b518114ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Class\PDFManager">
+      <UniqueIdentifier>{7c14e517-f959-4368-a3ad-d6bd8625c260}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Class\MainControl">
+      <UniqueIdentifier>{3d4939ad-e86d-4aae-8fe3-62e256fed747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Class\CSVManager">
+      <UniqueIdentifier>{0a6ceedc-899e-4077-987a-baca8d7daf88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils">
+      <UniqueIdentifier>{af90f7f2-5fcb-44f6-94da-3bcf92627ed1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Class\StudentInfo">
+      <UniqueIdentifier>{5a135fd1-764e-4627-8310-1619e719c884}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -40,6 +57,7 @@
     <None Include="submodules\imGui\backends\imgui_impl_osx.mm">
       <Filter>submodules\imGui\backends</Filter>
     </None>
+    <None Include="..\..\..\..\..\cppLibrary\pdfium-v8-win-x64\bin\pdfium.dll" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -71,6 +89,27 @@
     </ClCompile>
     <ClCompile Include="submodules\imGui\backends\imgui_impl_win32.cpp">
       <Filter>submodules\imGui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lodepng.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Class\PDFPage\PDFPage.cpp">
+      <Filter>Source Files\Class\PDFPage</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Class\PDFManager.cpp">
+      <Filter>Source Files\Class\PDFManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Class\MainControl\MainControl.cpp">
+      <Filter>Source Files\Class\MainControl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Class\CSVManager\CSVManager.cpp">
+      <Filter>Source Files\Class\CSVManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Utils.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Class\StudentInfo\StudentInfo.cpp">
+      <Filter>Source Files\Class\StudentInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +151,27 @@
     </ClInclude>
     <ClInclude Include="submodules\imGui\backends\imgui_impl_win32.h">
       <Filter>submodules\imGui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lodepng.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Class\PDFPage\PDFPage.h">
+      <Filter>Source Files\Class\PDFPage</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Class\PDFManager.h">
+      <Filter>Source Files\Class\PDFManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Class\MainControl\MainControl.h">
+      <Filter>Source Files\Class\MainControl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Class\CSVManager\CSVManager.h">
+      <Filter>Source Files\Class\CSVManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Utils.h">
+      <Filter>Source Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Class\StudentInfo\StudentInfo.h">
+      <Filter>Source Files\Class\StudentInfo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

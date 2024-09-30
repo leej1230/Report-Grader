@@ -106,15 +106,16 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)submodules\imGui;$(ProjectDir)submodules\imGui\backends;$(ProjectDir)submodules\imGui\examples\libs\glfw\include;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)submodules\imGui;$(ProjectDir)submodules\imGui\backends;$(ProjectDir)submodules\imGui\examples\libs\glfw\include;$(ProjectDir)submodules\rapidcsv\src;$(IncludePath);C:\cppLibrary\pdfium-v8-win-x64\include;C:\cppLibrary\nativefiledialog-release_116\src\include</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)submodules\imGui\examples\libs\glfw\lib-vc2010-64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;C:\cppLibrary\pdfium-v8-win-x64\lib\pdfium.dll.lib;$(CoreLibraryDependencies);C:\Program Files\gs\gs10.04.0\bin\gsdll64.lib;C:\cppLibrary\nativefiledialog-release_116\build\lib\Debug\x64\nfd_d.lib;C:\cppLibrary\nativefiledialog-release_116\build\lib\Release\x64\nfd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)submodules\imGui\examples\libs\glfw\lib-vc2010-64;</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -124,17 +125,24 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)submodules\imGui;$(ProjectDir)submodules\imGui\backends;$(ProjectDir)submodules\imGui\examples\libs\glfw\include;$(ProjectDir)submodules\rapidcsv\src;$(IncludePath);C:\cppLibrary\pdfium-v8-win-x64\include;C:\cppLibrary\nativefiledialog-release_116\src\include</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;C:\cppLibrary\pdfium-v8-win-x64\lib\pdfium.dll.lib;$(CoreLibraryDependencies);C:\Program Files\gs\gs10.04.0\bin\gsdll64.lib;C:\cppLibrary\nativefiledialog-release_116\build\lib\Debug\x64\nfd_d.lib;C:\cppLibrary\nativefiledialog-release_116\build\lib\Release\x64\nfd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)submodules\imGui\examples\libs\glfw\lib-vc2010-64;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\..\cppLibrary\pdfium-v8-win-x64\bin\pdfium.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="packages.config" />
     <None Include="submodules\imGui\.editorconfig" />
     <None Include="submodules\imGui\.gitattributes" />
@@ -143,7 +151,14 @@
     <None Include="submodules\imGui\backends\imgui_impl_osx.mm" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Class\CSVManager\CSVManager.cpp" />
+    <ClCompile Include="src\Class\MainControl\MainControl.cpp" />
+    <ClCompile Include="src\Class\PDFManager.cpp" />
+    <ClCompile Include="src\Class\PDFPage\PDFPage.cpp" />
+    <ClCompile Include="src\Class\StudentInfo\StudentInfo.cpp" />
+    <ClCompile Include="src\lodepng.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Utils\Utils.cpp" />
     <ClCompile Include="submodules\imGui\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="submodules\imGui\backends\imgui_impl_opengl2.cpp" />
     <ClCompile Include="submodules\imGui\backends\imgui_impl_opengl3.cpp" />
@@ -155,6 +170,13 @@
     <ClCompile Include="submodules\imGui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Class\CSVManager\CSVManager.h" />
+    <ClInclude Include="src\Class\MainControl\MainControl.h" />
+    <ClInclude Include="src\Class\PDFManager.h" />
+    <ClInclude Include="src\Class\PDFPage\PDFPage.h" />
+    <ClInclude Include="src\Class\StudentInfo\StudentInfo.h" />
+    <ClInclude Include="src\lodepng.h" />
+    <ClInclude Include="src\Utils\Utils.h" />
     <ClInclude Include="submodules\imGui\backends\imgui_impl_glfw.h" />
     <ClInclude Include="submodules\imGui\backends\imgui_impl_metal.h" />
     <ClInclude Include="submodules\imGui\backends\imgui_impl_opengl2.h" />
