@@ -10,7 +10,7 @@
 class CSVManager
 {
 public:
-	CSVManager(PDFManager* pdfManager, std::function<void(std::string)> callback) : m_PDFManager(pdfManager), m_callback(callback) {};
+	CSVManager(PDFManager* pdfManager, std::function<void(std::string)> callback, bool* showScorePopup) : m_PDFManager(pdfManager), m_callback(callback), m_showScorePopup(showScorePopup) {};
 	~CSVManager();
 	bool LoadCSV(std::string filePath);
 	std::vector<std::string> GetColumnNames();
@@ -22,22 +22,25 @@ public:
 	// Column to write score
 	// In future, add column
 	void Draw();
-
-	void SetPDFManager(PDFManager* pdfManager) { m_PDFManager = pdfManager; }
-
-	void SetCallback(std::function<void(std::string)> callback) { m_callback = callback; }
-
+	void DrawTable();
+	void DrawScorePopup();
+	
 	void PickNextStudent();
 	void PickPreviousStudent();
 private:
 	rapidcsv::Document m_document;
 
+	bool UpdateScore(std::string studentID, std::string newScore);
+
 	void UpdatePDFPreview(int i);
+	bool* m_showScorePopup = nullptr;
 
 	//! 現在選択中のラジオボタンのインデックス(0から)
 	std::unordered_map<std::string, StudentInfo> m_studentIDtoInfo;
+	std::unordered_map<std::string, int> m_studentIDtoRowIdx;
 	int m_selectedPDF = -1;
 	PDFManager* m_PDFManager = nullptr;
+	StudentInfo* m_currentStudent = nullptr;
 
 	std::function<void(std::string)> m_callback;
 };

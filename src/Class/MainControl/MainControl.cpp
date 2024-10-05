@@ -96,6 +96,8 @@ void MainControl::Draw()
 	}
 	ImGui::Text(u8"Currently opened CSV: %s", m_CSVPath.c_str());
 
+	ImGui::Checkbox("Show Score Popup", &m_showScorePopup);
+
 	ImGui::End();
 
 	// 生徒のテーブルを描画
@@ -103,5 +105,5 @@ void MainControl::Draw()
 }
 
 MainControl::MainControl(PDFManager* pdfManager) : m_PDFManager(pdfManager) {
-	m_CSVManager = new CSVManager(pdfManager, [this](std::string studentID) { RequestDrawPdf(studentID); });
+	m_CSVManager = new CSVManager(pdfManager, [this](std::string studentID) { RequestDrawPdf(studentID); }, &m_showScorePopup);
 }

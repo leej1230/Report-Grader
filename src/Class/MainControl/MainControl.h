@@ -27,6 +27,7 @@ private:
 
 	void GetCSVFilePath();
 	bool m_showStudentTable = false;
+	bool m_showScorePopup = false;
 	void DrawStudentTable();
 	void UpdateFileList(std::wstring filename);
 	std::unordered_map<std::string, std::string> studentIDtoFileName;

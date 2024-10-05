@@ -14,6 +14,7 @@
 #include "imgui_impl_opengl3.h"
 #include "Class/PDFPage/PDFPage.h"
 #include "Class/MainControl/MainControl.h"
+#include <thread>
 #include "nfd.h"
 
 #include <stdio.h>
@@ -93,7 +94,7 @@ int main(int, char**)
 #endif
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(1280, 720, "Leport Grader", NULL, NULL);
     if (window == nullptr)
         return 1;
     glfwMakeContextCurrent(window);
@@ -153,7 +154,12 @@ int main(int, char**)
     //FPDF_InitLibraryWithConfig(&config);
 	FPDF_InitLibrary();
 	PDFManager* pdfManager = new PDFManager();
-	MainControl* mainControl = new MainControl(pdfManager);
+    MainControl* mainControl = new MainControl(pdfManager);
+	std::string* windowTitle = new std::string("Leport Grader");
+    auto timerStart = std::chrono::high_resolution_clock::now();
+    auto timerEnd = std::chrono::high_resolution_clock::now();
+    float currFPS = 0.0f;
+    float targetFPS = 144.0f;
 
     // Main loop
 #ifdef __EMSCRIPTEN__
@@ -165,6 +171,13 @@ int main(int, char**)
     while (!glfwWindowShouldClose(window))
 #endif
     {
+        // TODO: control FPS
+		currFPS = 1.0f / std::chrono::duration<float>(timerEnd - timerStart).count();
+        *windowTitle = "Leport Grader - " + std::to_string(currFPS) + "FPS";
+
+		glfwSetWindowTitle(window, windowTitle->c_str());
+
+		timerStart = std::chrono::high_resolution_clock::now();
 
         // Poll and handle events (inputs, window resize, etc.)
         // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
@@ -203,6 +216,8 @@ int main(int, char**)
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
+
+        timerEnd = std::chrono::high_resolution_clock::now();
     }
 #ifdef __EMSCRIPTEN__
     EMSCRIPTEN_MAINLOOP_END;

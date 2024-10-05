@@ -1,6 +1,17 @@
 ﻿#include "CSVManager.h"
 #include "../../Utils/Utils.h"
 
+bool CSVManager::UpdateScore(std::string studentID, std::string newScore) {
+	try {
+		m_document.SetCell<std::string>(6, m_studentIDtoRowIdx[studentID], newScore);
+	}
+	catch (const std::exception& e) {
+		return false;
+	}
+	m_document.Save();
+	return true;
+}
+
 bool CSVManager::LoadCSV(std::string filePath)
 {
 	try {
@@ -22,6 +33,7 @@ bool CSVManager::LoadCSV(std::string filePath)
 			std::string rRole = row[0];
 			if (rRole != "履修生") continue;
 
+			m_studentIDtoRowIdx[row[2]] = i;
 			std::string rStudentUserID = Utility::DecodeGarble(row[1]);
 			std::string rStudentID = Utility::DecodeGarble(row[2]);
 			std::string rStudentName = Utility::DecodeGarble(row[3]);
@@ -52,6 +64,7 @@ void CSVManager::UpdatePDFPreview(int i) {
 	if (m_callback) {
 		auto& [studentID, studentInfo] = *std::next(m_studentIDtoInfo.begin(), i);
 		m_callback(studentInfo.GetStudentID());
+		m_currentStudent = &studentInfo;
 	}
 }
 
@@ -65,7 +78,7 @@ void CSVManager::PickPreviousStudent() {
 	UpdatePDFPreview(m_selectedPDF);
 }
 
-void CSVManager::Draw() {
+void CSVManager::DrawTable() {
 	ImGui::Begin("Student Table");
 
 	if (ImGui::BeginTable("StudentTable", 8)) {
@@ -125,6 +138,35 @@ void CSVManager::Draw() {
 	}
 
 	ImGui::End();
+}
+
+void CSVManager::DrawScorePopup() {
+	ImGui::Begin("Score Popup");
+
+	if (m_currentStudent) {
+		int currScore = std::stoi(m_currentStudent->GetScore());
+		if (ImGui::InputInt("Score: ", &currScore)) {
+			auto& [studentID, studentInfo] = *std::next(m_studentIDtoInfo.begin(), m_selectedPDF);
+			studentInfo.SetScore(std::to_string(currScore));
+			UpdateScore(studentID, std::to_string(currScore));
+		}
+	}
+
+	if (ImGui::Button("Previous")) {
+		PickPreviousStudent();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Next")) {
+		PickNextStudent();
+	}
+
+	ImGui::End();
+}
+
+void CSVManager::Draw() {
+	DrawTable();
+	if (*m_showScorePopup)
+		DrawScorePopup();
 }
 
 
