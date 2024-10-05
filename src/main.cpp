@@ -12,7 +12,6 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "lodepng.h"
 #include "Class/PDFPage/PDFPage.h"
 #include "Class/MainControl/MainControl.h"
 #include "nfd.h"
@@ -154,10 +153,12 @@ int main(int, char**)
     //FPDF_InitLibraryWithConfig(&config);
 	FPDF_InitLibrary();
 	MainControl* mainControl = new MainControl();
-
-    PDFManager m_pdfManager;
-    m_pdfManager.LoadPDFFromStringPath("");
-	std::vector<PDFPage> pdfPages = m_pdfManager.GetPagePreview();
+	PDFManager* pdfManager = new PDFManager();
+	mainControl->SetPDFManager(pdfManager);
+    //pdfManager->PreparePreview("");
+    /*
+    pdfManager->LoadPDFFromStringPath("");
+	std::vector<PDFPage> pdfPages = pdfManager->GetPagePreview();
 	std::vector<GLuint> textureIDs;
 	for (auto& pdfPage : pdfPages) {
 		GLuint textureID = 0;
@@ -168,6 +169,7 @@ int main(int, char**)
 	}
 
     float zoomScale = 1.0f;
+    */
 
     // Main loop
 #ifdef __EMSCRIPTEN__
@@ -231,6 +233,7 @@ int main(int, char**)
 
         // PDF Viewer
         // Show pdf
+        /*
         {
             ImGui::Begin("PDF Preview");
 			ImGui::SliderFloat("Scale", &zoomScale, 0.5f, 2.0f);
@@ -246,6 +249,8 @@ int main(int, char**)
 
             ImGui::End();
         }
+        */
+        pdfManager->Draw();
 
         // Rendering
         ImGui::Render();

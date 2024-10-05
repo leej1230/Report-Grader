@@ -1,4 +1,37 @@
-#include "MainControl.h"
+﻿#include "MainControl.h"
+
+void MainControl::UpdateFileList(std::wstring filename) {
+	int iBufferSize = WideCharToMultiByte(CP_OEMCP, 0, filename.c_str(), -1, (char*)NULL, 0, NULL, NULL);
+	CHAR* cpMultiByte = new CHAR[iBufferSize];
+	WideCharToMultiByte(CP_OEMCP, 0, filename.c_str(), -1, cpMultiByte, iBufferSize, NULL, NULL);
+	std::string fileNameStr(cpMultiByte, cpMultiByte + iBufferSize - 1);
+
+	// 正義表現によるファイル名チェック
+	if (std::regex_match(fileNameStr, fileNamePattern)) {
+		std::stringstream ss(fileNameStr);
+		std::string studentID;
+		if(std::getline(ss, studentID, '@'))
+			studentIDtoFileName[studentID] = fileNameStr;
+	}
+}
+
+bool MainControl::GetPDFFilePath(std::string studentID, std::string &fullPath) {
+	if (studentIDtoFileName.find(studentID) != studentIDtoFileName.end()) {
+		fullPath = m_PDFPath + "\\" + studentIDtoFileName[studentID];
+		return true;
+	}
+	return false;
+}
+
+void MainControl::RequestDrawPdf(std::string studentID) {
+	std::string filePath;
+	if (GetPDFFilePath(studentID, filePath)) {
+		m_PDFManager->PreparePreview(filePath);
+	}
+	else {
+		m_PDFManager->PreparePreview("");
+	}
+}
 
 void MainControl::Draw()
 {
@@ -14,7 +47,8 @@ void MainControl::Draw()
 			bool check = std::filesystem::exists(m_PDFPath);
 			pdfFiles.clear();
 			for (const auto& entry : std::filesystem::directory_iterator(m_PDFPath.c_str()))
-				pdfFiles.push_back(entry.path().filename().wstring());
+				UpdateFileList(entry.path().filename().wstring());
+				//pdfFiles.push_back(entry.path().filename().wstring());
 		}
 		else if (result == NFD_CANCEL) {
 			m_PDFPath = "null";
@@ -41,6 +75,7 @@ void MainControl::Draw()
 			m_CSVPath = outPath;
 			bool check = std::filesystem::exists(m_CSVPath);
 			if (check) m_CSVManager.LoadCSV(m_CSVPath.c_str());
+			m_showStudentTable = true;
 		}
 		else if (result == NFD_CANCEL) {
 			m_CSVPath = "null";
@@ -50,14 +85,16 @@ void MainControl::Draw()
 		}
 	}
 
-	ImGui::End();
-
 	if (m_showStudentTable) DrawStudentTable();
+
+	ImGui::End();
 }
 
 void MainControl::DrawStudentTable()
 {
 	ImGui::Begin("Student Table");
+
+	m_CSVManager.DrawTable();
 
 	ImGui::End();
 }

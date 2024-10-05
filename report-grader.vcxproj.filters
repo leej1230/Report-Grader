@@ -90,9 +90,6 @@
     <ClCompile Include="submodules\imGui\backends\imgui_impl_win32.cpp">
       <Filter>submodules\imGui\backends</Filter>
     </ClCompile>
-    <ClCompile Include="src\lodepng.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Class\PDFPage\PDFPage.cpp">
       <Filter>Source Files\Class\PDFPage</Filter>
     </ClCompile>
@@ -151,9 +148,6 @@
     </ClInclude>
     <ClInclude Include="submodules\imGui\backends\imgui_impl_win32.h">
       <Filter>submodules\imGui\backends</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lodepng.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Class\PDFPage\PDFPage.h">
       <Filter>Source Files\Class\PDFPage</Filter>

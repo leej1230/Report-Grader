@@ -156,7 +156,6 @@
     <ClCompile Include="src\Class\PDFManager.cpp" />
     <ClCompile Include="src\Class\PDFPage\PDFPage.cpp" />
     <ClCompile Include="src\Class\StudentInfo\StudentInfo.cpp" />
-    <ClCompile Include="src\lodepng.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Utils\Utils.cpp" />
     <ClCompile Include="submodules\imGui\backends\imgui_impl_glfw.cpp" />
@@ -175,7 +174,6 @@
     <ClInclude Include="src\Class\PDFManager.h" />
     <ClInclude Include="src\Class\PDFPage\PDFPage.h" />
     <ClInclude Include="src\Class\StudentInfo\StudentInfo.h" />
-    <ClInclude Include="src\lodepng.h" />
     <ClInclude Include="src\Utils\Utils.h" />
     <ClInclude Include="submodules\imGui\backends\imgui_impl_glfw.h" />
     <ClInclude Include="submodules\imGui\backends\imgui_impl_metal.h" />

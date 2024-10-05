@@ -3,6 +3,10 @@
 #include <Windows.h>
 #include <fstream>
 #include <numeric>
+#include <imgui.h>
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+#include <GLFW/glfw3.h>
 
 void PDFManager::LoadPDFFromStringPath(std::string filePath)
 {
@@ -84,4 +88,57 @@ std::vector<PDFPage> PDFManager::GetPagePreview()
 	}
 
 	return res;
+}
+
+bool PDFManager::LoadTextureFromMemory(std::vector<uint8_t> vec, GLuint* out_texture, int image_width, int image_height)
+{
+	// Create a OpenGL texture identifier
+	GLuint image_texture;
+	glGenTextures(1, &image_texture);
+	glBindTexture(GL_TEXTURE_2D, image_texture);
+
+	// Setup filtering parameters for display
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// Upload pixels into texture
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, vec.data());
+
+	*out_texture = image_texture;
+
+	return true;
+}
+
+void PDFManager::PreparePreview(std::string filePath)
+{
+	m_pdfPages.clear();
+	m_textureIDs.clear();
+
+	LoadPDFFromStringPath(filePath);
+	m_pdfPages = GetPagePreview();
+	for (auto& pdfPage : m_pdfPages) {
+		GLuint textureID = 0;
+		GLsizei pageWidth = pdfPage.GetPageWidth();
+		GLsizei pageHeight = pdfPage.GetPageHeight();
+		LoadTextureFromMemory(pdfPage.GetPageBuffer(), &textureID, pageWidth, pageHeight);
+		m_textureIDs.push_back(textureID);
+	}
+}
+
+void PDFManager::Draw()
+{
+	ImGui::Begin("PDF Preview");
+	ImGui::SliderFloat("Scale", &m_ZoomScale, 0.5f, 2.0f);
+
+	//ImGui::Text("pointer = %x", textureID);
+	//ImGui::Text("size = %d x %d", pageWidth, pageHeight);
+	ImGui::BeginChild("PDF Preview", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
+	int pageCount = m_pdfPages.size();
+	for (int i = 0; i < pageCount; ++i) {
+		ImGui::Image((void*)(intptr_t)m_textureIDs[i], ImVec2(m_pdfPages[i].GetPageWidth() * m_ZoomScale, m_pdfPages[i].GetPageHeight() * m_ZoomScale));
+	}
+	ImGui::EndChild();
+
+	ImGui::End();
 }
