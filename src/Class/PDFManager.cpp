@@ -110,10 +110,11 @@ bool PDFManager::LoadTextureFromMemory(std::vector<uint8_t> vec, GLuint* out_tex
 	return true;
 }
 
-void PDFManager::PreparePreview(std::string filePath)
+void PDFManager::UpdatePDFPreview(std::string filePath)
 {
 	m_pdfPages.clear();
 	m_textureIDs.clear();
+	m_pdfPath = "";
 
 	LoadPDFFromStringPath(filePath);
 	m_pdfPages = GetPagePreview();
@@ -131,8 +132,6 @@ void PDFManager::Draw()
 	ImGui::Begin("PDF Preview");
 	ImGui::SliderFloat("Scale", &m_ZoomScale, 0.5f, 2.0f);
 
-	//ImGui::Text("pointer = %x", textureID);
-	//ImGui::Text("size = %d x %d", pageWidth, pageHeight);
 	ImGui::BeginChild("PDF Preview", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
 	int pageCount = m_pdfPages.size();
 	for (int i = 0; i < pageCount; ++i) {

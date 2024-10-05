@@ -48,7 +48,26 @@ bool CSVManager::LoadCSV(std::string filePath)
 	return true;
 }
 
-void CSVManager::DrawTable() {
+void CSVManager::UpdatePDFPreview(int i) {
+	if (m_callback) {
+		auto& [studentID, studentInfo] = *std::next(m_studentIDtoInfo.begin(), i);
+		m_callback(studentInfo.GetStudentID());
+	}
+}
+
+void CSVManager::PickNextStudent() {
+	m_selectedPDF = (m_selectedPDF + 1) % m_studentIDtoInfo.size();
+	UpdatePDFPreview(m_selectedPDF);
+}
+
+void CSVManager::PickPreviousStudent() {
+	m_selectedPDF = (m_selectedPDF - 1 + m_studentIDtoInfo.size()) % m_studentIDtoInfo.size();
+	UpdatePDFPreview(m_selectedPDF);
+}
+
+void CSVManager::Draw() {
+	ImGui::Begin("Student Table");
+
 	if (ImGui::BeginTable("StudentTable", 8)) {
 		ImGui::TableSetupColumn("PDF", ImGuiTableColumnFlags_WidthFixed, 100);
 		ImGui::TableSetupColumn("学籍番号", ImGuiTableColumnFlags_WidthFixed, 100);
@@ -66,11 +85,17 @@ void CSVManager::DrawTable() {
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
 			ImGui::PushID(i);
+
+			if (i == m_selectedPDF) {
+				ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, IM_COL32(60, 50, 120, 255));
+			}
+			else {
+				ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, IM_COL32(0, 0, 0, 0));
+			}
+
 			if (ImGui::RadioButton("", &m_selectedPDF, i)) {
 				// Set PDF
-				if(m_callback) 
-					m_callback(studentInfo.GetStudentID());
-				//m_PDFManager->PreparePreview(studentInfo.GetStudentID());
+				UpdatePDFPreview(i);
 			}
 			ImGui::PopID();
 			ImGui::TableNextColumn();
@@ -90,7 +115,18 @@ void CSVManager::DrawTable() {
 		}
 		ImGui::EndTable();
 	}
+
+	if (ImGui::Button("Next")) {
+		PickNextStudent();
+	}
+
+	if (ImGui::Button("Previous")) {
+		PickPreviousStudent();
+	}
+
+	ImGui::End();
 }
+
 
 CSVManager::~CSVManager()
 {

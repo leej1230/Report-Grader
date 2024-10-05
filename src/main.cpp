@@ -152,24 +152,8 @@ int main(int, char**)
     //config.m_pUserFontPaths = NULL;
     //FPDF_InitLibraryWithConfig(&config);
 	FPDF_InitLibrary();
-	MainControl* mainControl = new MainControl();
 	PDFManager* pdfManager = new PDFManager();
-	mainControl->SetPDFManager(pdfManager);
-    //pdfManager->PreparePreview("");
-    /*
-    pdfManager->LoadPDFFromStringPath("");
-	std::vector<PDFPage> pdfPages = pdfManager->GetPagePreview();
-	std::vector<GLuint> textureIDs;
-	for (auto& pdfPage : pdfPages) {
-		GLuint textureID = 0;
-		GLsizei pageWidth = pdfPage.GetPageWidth();
-		GLsizei pageHeight = pdfPage.GetPageHeight();
-		LoadTextureFromMemory(pdfPage.GetPageBuffer(), &textureID, pageWidth, pageHeight);
-		textureIDs.push_back(textureID);
-	}
-
-    float zoomScale = 1.0f;
-    */
+	MainControl* mainControl = new MainControl(pdfManager);
 
     // Main loop
 #ifdef __EMSCRIPTEN__
@@ -198,58 +182,15 @@ int main(int, char**)
 
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
         //if (show_demo_window)
-        //    ImGui::ShowDemoWindow(&show_demo_window);
+        //ImGui::ShowDemoWindow(&show_demo_window);
 
         // Control Panel
 		// Show control
         mainControl->Draw();
-        /*
-        {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-            ImGui::End();
-        }
-        */
 
         // Student List
         // Show table to select pdfs
 
-
-        // PDF Viewer
-        // Show pdf
-        /*
-        {
-            ImGui::Begin("PDF Preview");
-			ImGui::SliderFloat("Scale", &zoomScale, 0.5f, 2.0f);
-
-            //ImGui::Text("pointer = %x", textureID);
-            //ImGui::Text("size = %d x %d", pageWidth, pageHeight);
-			ImGui::BeginChild("PDF Preview", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
-            int pageCount = pdfPages.size();
-            for(int i=0; i<pageCount; ++i){
-				ImGui::Image((void*)(intptr_t)textureIDs[i], ImVec2(pdfPages[i].GetPageWidth()*zoomScale, pdfPages[i].GetPageHeight()*zoomScale));
-			}
-			ImGui::EndChild();
-
-            ImGui::End();
-        }
-        */
         pdfManager->Draw();
 
         // Rendering

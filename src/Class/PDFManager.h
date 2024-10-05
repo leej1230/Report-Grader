@@ -20,7 +20,7 @@ public:
 
 	int GetPageCount() { return FPDF_GetPageCount(m_pdfDocument); }
 	std::vector<PDFPage> GetPagePreview();
-	void PreparePreview(std::string filePath);
+	void UpdatePDFPreview(std::string filePath);
 	void Draw();
 private:
 	bool LoadTextureFromMemory(std::vector<uint8_t> vec, GLuint* out_texture, int image_width, int image_height);
