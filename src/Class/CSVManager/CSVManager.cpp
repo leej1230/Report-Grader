@@ -18,12 +18,8 @@ bool CSVManager::LoadCSV(std::string filePath)
 		m_document = rapidcsv::Document(filePath, rapidcsv::LabelParams(6, -1));
 		
 		std::vector<std::string> columns = m_document.GetColumnNames();
-		std::vector<std::string> columnsShiftJIS;
-		std::vector<std::string> columnsUTF8;
-		for (auto& column : columns) {
-			columnsShiftJIS.push_back(Utility::DecodeGarble(column));
-			columnsUTF8.push_back(Utility::EncodeGarble(Utility::DecodeGarble(column)));
-		}
+		m_columnNames = columns;
+		//for (auto& column : columns) m_columnNames.push_back(Utility::DecodeGarble(column));
 
 		std::vector<std::string> m_studentIDs = m_document.GetColumn<std::string>("# 学籍番号");
 
@@ -34,16 +30,37 @@ bool CSVManager::LoadCSV(std::string filePath)
 			if (rRole != "履修生") continue;
 
 			m_studentIDtoRowIdx[row[2]] = i;
-			std::string rStudentUserID = Utility::DecodeGarble(row[1]);
-			std::string rStudentID = Utility::DecodeGarble(row[2]);
-			std::string rStudentName = Utility::DecodeGarble(row[3]);
-			std::string rStudentNameEnglish = Utility::DecodeGarble(row[4]);
-			std::string rEmail = Utility::DecodeGarble(row[5]);
-			std::string rScore = Utility::DecodeGarble(row[6]);
-			std::string rSubmissionStatus = Utility::DecodeGarble(row[9]);
-			std::string rSubmissionDate = Utility::DecodeGarble(row[10]);
-			StudentInfo studentInfo(rStudentUserID, rStudentID, rStudentName, rStudentNameEnglish, rEmail, rScore, rSubmissionStatus, rSubmissionDate);
-			m_studentIDtoInfo.emplace(rStudentID, studentInfo);
+			std::string studentUserID = row[1];
+			std::string studentID = row[2];
+			std::string studentName = row[3];
+			std::string studentNameEnglish = row[4];
+			std::string studentEmail = row[5];
+			std::string studentTotalScore = row[6];
+			std::string studentEvaluation = row[7];
+			std::string studentComment = row[8];
+			std::string submissionStatus = row[9];
+			std::string submissionDate = row[10];
+			std::string submissionCount = row[11];
+			std::string fileName1 = row[12];
+			//std::string fileName2 = row[13];
+			//std::string fileName3 = row[14];
+			StudentInfo studentInfo(
+				studentUserID,
+				studentID,
+				studentName,
+				studentNameEnglish,
+				studentEmail,
+				studentTotalScore,
+				studentEvaluation,
+				studentComment,
+				submissionStatus,
+				submissionDate,
+				submissionCount,
+				fileName1
+				//fileName2,
+				//fileName3
+			);
+			m_studentIDtoInfo.emplace(studentID, studentInfo);
 		}
 	}
 	catch (const std::exception& e) {
@@ -81,15 +98,16 @@ void CSVManager::PickPreviousStudent() {
 void CSVManager::DrawTable() {
 	ImGui::Begin("Student Table");
 
-	if (ImGui::BeginTable("StudentTable", 8)) {
-		ImGui::TableSetupColumn("PDF", ImGuiTableColumnFlags_WidthFixed, 100);
-		ImGui::TableSetupColumn("学籍番号", ImGuiTableColumnFlags_WidthFixed, 100);
-		ImGui::TableSetupColumn("氏名", ImGuiTableColumnFlags_WidthFixed, 100);
-		ImGui::TableSetupColumn("氏名(英語)", ImGuiTableColumnFlags_WidthFixed, 100);
-		ImGui::TableSetupColumn("メールアドレス", ImGuiTableColumnFlags_WidthFixed, 100);
-		ImGui::TableSetupColumn("点数", ImGuiTableColumnFlags_WidthFixed, 100);
-		ImGui::TableSetupColumn("提出状況", ImGuiTableColumnFlags_WidthFixed, 100);
-		ImGui::TableSetupColumn("提出日", ImGuiTableColumnFlags_WidthFixed, 100);
+	if (m_columnNames.empty()) {
+		ImGui::Text("No CSV loaded");
+		ImGui::End();
+		return;
+	}
+	if (ImGui::BeginTable("StudentTable", m_columnNames.size())) {
+		ImGui::TableSetupColumn("PDF", ImGuiTableColumnFlags_WidthStretch);
+		for (int i = 1; i < m_columnNames.size(); ++i) {
+			ImGui::TableSetupColumn(m_columnNames[i].c_str(), ImGuiTableColumnFlags_WidthStretch);
+		}
 		ImGui::TableHeadersRow();
 
 		for (int i = 0; i < m_studentIDtoInfo.size(); ++i) {
@@ -111,6 +129,9 @@ void CSVManager::DrawTable() {
 				UpdatePDFPreview(i);
 			}
 			ImGui::PopID();
+
+			ImGui::TableNextColumn();
+			ImGui::Text(studentInfo.GetStudentUserID().c_str());
 			ImGui::TableNextColumn();
 			ImGui::Text(studentInfo.GetStudentID().c_str());
 			ImGui::TableNextColumn();
@@ -120,22 +141,34 @@ void CSVManager::DrawTable() {
 			ImGui::TableNextColumn();
 			ImGui::Text(studentInfo.GetStudentEmail().c_str());
 			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetScore().c_str());
+			ImGui::Text(studentInfo.GetStudentTotalScore().c_str());
+			ImGui::TableNextColumn();
+			ImGui::Text(studentInfo.GetStudentEvaluation().c_str());
+			ImGui::TableNextColumn();
+			ImGui::Text(studentInfo.GetStudentComment().c_str());
 			ImGui::TableNextColumn();
 			ImGui::Text(studentInfo.GetSubmissionStatus().c_str());
 			ImGui::TableNextColumn();
 			ImGui::Text(studentInfo.GetSubmissionDate().c_str());
+			ImGui::TableNextColumn();
+			ImGui::Text(studentInfo.GetSubmissionCount().c_str());
+			ImGui::TableNextColumn();
+			ImGui::Text(studentInfo.GetFileName1().c_str());
+			ImGui::TableNextColumn();
+			ImGui::Text(studentInfo.GetFileName2().c_str());
+			ImGui::TableNextColumn();
+			ImGui::Text(studentInfo.GetFileName3().c_str());
 		}
 		ImGui::EndTable();
 	}
 
-	if (ImGui::Button("Next")) {
-		PickNextStudent();
-	}
+	//if (ImGui::Button("Next")) {
+	//	PickNextStudent();
+	//}
 
-	if (ImGui::Button("Previous")) {
-		PickPreviousStudent();
-	}
+	//if (ImGui::Button("Previous")) {
+	//	PickPreviousStudent();
+	//}
 
 	ImGui::End();
 }
@@ -144,20 +177,23 @@ void CSVManager::DrawScorePopup() {
 	ImGui::Begin("Score Popup");
 
 	if (m_currentStudent) {
-		int currScore = std::stoi(m_currentStudent->GetScore());
-		if (ImGui::InputInt("Score: ", &currScore)) {
+		int currScore = std::stoi(m_currentStudent->GetStudentTotalScore());
+		if (ImGui::InputInt("Score", &currScore)) {
 			auto& [studentID, studentInfo] = *std::next(m_studentIDtoInfo.begin(), m_selectedPDF);
-			studentInfo.SetScore(std::to_string(currScore));
+			studentInfo.SetStudentTotalScore(std::to_string(currScore));
 			UpdateScore(studentID, std::to_string(currScore));
 		}
-	}
 
-	if (ImGui::Button("Previous")) {
-		PickPreviousStudent();
+		if (ImGui::Button("Previous")) {
+			PickPreviousStudent();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Next")) {
+			PickNextStudent();
+		}
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Next")) {
-		PickNextStudent();
+	else {
+		ImGui::Text("No student selected");
 	}
 
 	ImGui::End();

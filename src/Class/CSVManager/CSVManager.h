@@ -41,6 +41,7 @@ private:
 	int m_selectedPDF = -1;
 	PDFManager* m_PDFManager = nullptr;
 	StudentInfo* m_currentStudent = nullptr;
+	std::vector<std::string> m_columnNames;
 
 	std::function<void(std::string)> m_callback;
 };

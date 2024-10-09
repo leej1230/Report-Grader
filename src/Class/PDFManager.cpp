@@ -1,4 +1,4 @@
-#include "PDFManager.h"
+ï»¿#include "PDFManager.h"
 #include <iostream>
 #include <Windows.h>
 #include <fstream>
@@ -7,6 +7,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
+#include "../Utils/Utils.h"
 
 void PDFManager::LoadPDFFromStringPath(std::string filePath)
 {
@@ -20,20 +21,28 @@ void PDFManager::LoadPDFFromStringPath(std::string filePath)
 		return;
 	}
 
-	// “ú–{Œê‚Ìƒtƒ@ƒCƒ‹–¼‚à“Ç‚İ‚ß‚é‚æ‚¤‚É‚·‚é‚½‚ß‚Éƒƒ‚ƒŠ‚Éƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş
+	// æ—¥æœ¬èªã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚‚èª­ã¿è¾¼ã‚ã‚‹ã‚ˆã†ã«ã™ã‚‹ãŸã‚ã«ãƒ¡ãƒ¢ãƒªã«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€
 	std::streamsize fileSize = file.tellg();
 	file.seekg(0, std::ios::beg);
 	std::vector<uint8_t> buffer(fileSize);
 	if (!file.read(reinterpret_cast<char*>(buffer.data()), fileSize)) {
 		std::cout << "Couldn't Read file" << std::endl;
+		return;
 	}
 
 	m_documentBuffer = buffer;
 
+	// pdfã®ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã‚’ãƒ¡ãƒ¢ãƒªã‹ã‚‰èª­ã¿è¾¼ã‚€
+	try {
+		m_pdfDocument = FPDF_LoadMemDocument(m_documentBuffer.data(), m_documentBuffer.size(), nullptr);
+	}
+	catch (const std::exception& e) {
+		std::cout << "Error: " << e.what() << std::endl;
+		return;
+	}
+
 	m_pdfPath = filePath;
 
-	// pdf‚ÌƒhƒLƒ…ƒƒ“ƒg‚ğƒƒ‚ƒŠ‚©‚ç“Ç‚İ‚Ş
-	m_pdfDocument = FPDF_LoadMemDocument(m_documentBuffer.data(), m_documentBuffer.size(), nullptr);
 }
 
 std::vector<PDFPage> PDFManager::GetPagePreview()
@@ -125,11 +134,13 @@ void PDFManager::UpdatePDFPreview(std::string filePath)
 		LoadTextureFromMemory(pdfPage.GetPageBuffer(), &textureID, pageWidth, pageHeight);
 		m_textureIDs.push_back(textureID);
 	}
+
+	m_windowTitle = "PDF Preview " + Utility::EncodeGarble(m_pdfPath) +"###";
 }
 
 void PDFManager::Draw()
 {
-	ImGui::Begin("PDF Preview");
+	ImGui::Begin(m_windowTitle.c_str());
 	ImGui::SliderFloat("Scale", &m_ZoomScale, 0.5f, 2.0f);
 
 	ImGui::BeginChild("PDF Preview", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar);

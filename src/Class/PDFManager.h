@@ -27,6 +27,7 @@ private:
 	std::vector<uint8_t> m_pdfBitmaps;
 	std::vector<uint8_t> m_buffer;
 	std::string m_pdfPath;
+	std::string m_windowTitle = "PDF Preview###";
 	std::vector<uint8_t> m_documentBuffer;
 	FPDF_DOCUMENT m_pdfDocument;
 	float m_ZoomScale = 1.0f;

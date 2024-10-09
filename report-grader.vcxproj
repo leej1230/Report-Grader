@@ -110,6 +110,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)submodules\imGui;$(ProjectDir)submodules\imGui\backends;$(ProjectDir)submodules\imGui\examples\libs\glfw\include;$(ProjectDir)submodules\rapidcsv\src;$(IncludePath);C:\cppLibrary\pdfium-v8-win-x64\include;C:\cppLibrary\nativefiledialog-release_116\src\include</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,6 +130,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)submodules\imGui;$(ProjectDir)submodules\imGui\backends;$(ProjectDir)submodules\imGui\examples\libs\glfw\include;$(ProjectDir)submodules\rapidcsv\src;$(IncludePath);C:\cppLibrary\pdfium-v8-win-x64\include;C:\cppLibrary\nativefiledialog-release_116\src\include</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

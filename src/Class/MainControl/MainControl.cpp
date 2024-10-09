@@ -1,4 +1,5 @@
 ﻿#include "MainControl.h"
+#include "../../Utils/Utils.h"
 
 void MainControl::UpdateFileList(std::wstring filename) {
 	int iBufferSize = WideCharToMultiByte(CP_OEMCP, 0, filename.c_str(), -1, (char*)NULL, 0, NULL, NULL);
@@ -38,7 +39,7 @@ void MainControl::GetPDFDirPath() {
 	nfdresult_t result = NFD_PickFolder(NULL, &outPath);
 
 	if (result == NFD_OKAY) {
-		m_PDFPath = outPath;
+		m_PDFPath = Utility::DecodeGarble(outPath);
 		bool check = std::filesystem::exists(m_PDFPath);
 		pdfFiles.clear();
 		for (const auto& entry : std::filesystem::directory_iterator(m_PDFPath.c_str()))
@@ -58,7 +59,7 @@ void MainControl::GetCSVFilePath() {
 	nfdresult_t result = NFD_OpenDialog("csv", NULL, &outPath);
 
 	if (result == NFD_OKAY) {
-		m_CSVPath = outPath;
+		m_CSVPath = Utility::DecodeGarble(outPath);
 		bool check = std::filesystem::exists(m_CSVPath);
 		if (check) m_CSVManager->LoadCSV(m_CSVPath.c_str());
 		m_showStudentTable = true;
@@ -79,7 +80,7 @@ void MainControl::Draw()
 	if (ImGui::Button("Open Directory")) {
 		GetPDFDirPath();
 	}
-	ImGui::Text(u8"Currently opened directory: %s", m_PDFPath.c_str());
+	ImGui::Text(u8"Currently opened directory: %s", Utility::EncodeGarble(m_PDFPath).c_str());
 	
 	//PDFのファイル一覧を書き出す
 	//for (const auto& pdfFile : pdfFiles) {
@@ -94,7 +95,7 @@ void MainControl::Draw()
 	if (ImGui::Button("Open CSV")) {
 		GetCSVFilePath();
 	}
-	ImGui::Text(u8"Currently opened CSV: %s", m_CSVPath.c_str());
+	ImGui::Text(u8"Currently opened CSV: %s", Utility::EncodeGarble(m_CSVPath).c_str());
 
 	ImGui::Checkbox("Show Score Popup", &m_showScorePopup);
 
