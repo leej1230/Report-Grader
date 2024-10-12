@@ -30,7 +30,7 @@ private:
 	std::string m_windowTitle = "PDF Preview###";
 	std::vector<uint8_t> m_documentBuffer;
 	FPDF_DOCUMENT m_pdfDocument;
-	float m_ZoomScale = 1.0f;
+	int m_ZoomScale = 0;
 	std::vector<PDFPage> m_pdfPages;
 	std::vector<GLuint> m_textureIDs;
 };

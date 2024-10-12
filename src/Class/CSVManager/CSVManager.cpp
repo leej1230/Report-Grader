@@ -88,7 +88,7 @@ bool CSVManager::LoadCSV(std::string filePath)
 void CSVManager::UpdatePDFPreview(int i) {
 	if (m_callback) {
 		auto& [studentID, studentInfo] = *std::next(m_studentIDtoInfo.begin(), i);
-		//m_callback(studentInfo.GetStudentID());
+		m_callback(studentID);
 		m_currentStudent = &studentInfo;
 	}
 }
@@ -138,6 +138,10 @@ void CSVManager::DrawTable() {
 			}
 			ImGui::PopID();
 
+			for (int j = 1; j < m_columnNames.size(); ++j) {
+				ImGui::TableNextColumn();
+				ImGui::Text(studentInfo.GetStudentInfo(m_columnNames[j]).c_str());
+			}
 			//ImGui::TableNextColumn();
 			//ImGui::Text(studentInfo.GetStudentUserID().c_str());
 			//ImGui::TableNextColumn();
@@ -169,14 +173,6 @@ void CSVManager::DrawTable() {
 		}
 		ImGui::EndTable();
 	}
-
-	//if (ImGui::Button("Next")) {
-	//	PickNextStudent();
-	//}
-
-	//if (ImGui::Button("Previous")) {
-	//	PickPreviousStudent();
-	//}
 
 	ImGui::End();
 }
