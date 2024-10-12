@@ -41,6 +41,10 @@ void PDFManager::LoadPDFFromStringPath(std::string filePath)
 		return;
 	}
 
+	if (!m_pdfDocument) {
+		std::cout << "Error: File maybe corrupted" << std::endl;
+		return;
+	}
 	m_pdfPath = filePath;
 
 }
@@ -141,14 +145,27 @@ void PDFManager::UpdatePDFPreview(std::string filePath)
 void PDFManager::Draw()
 {
 	ImGui::Begin(m_windowTitle.c_str());
-	ImGui::SliderFloat("Scale", &m_ZoomScale, 0.5f, 2.0f);
+	//ImGui::SliderFloat("Scale", &m_ZoomScale, 0.5f, 2.0f);
+	ImGui::SliderInt("Scale", &m_ZoomScale, 0, 10, nullptr);
+	ImGui::Text("Zoom Scale: %d%%", 100 + (m_ZoomScale * 10));
 
-	ImGui::BeginChild("PDF Preview", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
+	//ImGui::BeginChild("PDF Preview", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
+	//ImGui::Begin("PDF Preview", 0, ImGuiChildFlags_Border);
+
+	ImGui::NewLine();
+
 	int pageCount = m_pdfPages.size();
-	for (int i = 0; i < pageCount; ++i) {
-		ImGui::Image((void*)(intptr_t)m_textureIDs[i], ImVec2(m_pdfPages[i].GetPageWidth() * m_ZoomScale, m_pdfPages[i].GetPageHeight() * m_ZoomScale));
+	if (pageCount != 0) {
+		float windowWidth = ImGui::GetContentRegionAvail().x;
+		float imageWidth = windowWidth;
+		float imageHeight = m_pdfPages[0].GetPageHeight() / m_pdfPages[0].GetPageWidth() * imageWidth;
+		float zoomRatio = 1 + m_ZoomScale * 0.1;
+
+		for (int i = 0; i < pageCount; ++i) {
+			ImGui::Image((void*)(intptr_t)m_textureIDs[i], ImVec2(imageWidth * zoomRatio, imageHeight * zoomRatio));
+		}
 	}
-	ImGui::EndChild();
+	//ImGui::EndChild();
 
 	ImGui::End();
 }
