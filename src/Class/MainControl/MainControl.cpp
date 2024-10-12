@@ -76,20 +76,16 @@ void MainControl::Draw()
 {
 	ImGui::Begin("Main Control");
 
+	// PDFとCSVのあるディレクトリを指定
+	if (ImGui::Button("Open PDFs and CSV")) {
+		// GetPDFCSVDirPath();
+	}
+
 	// PDFのディレクトリを開く
 	if (ImGui::Button("Open Directory")) {
 		GetPDFDirPath();
 	}
 	ImGui::Text(u8"Currently opened directory: %s", Utility::EncodeGarble(m_PDFPath).c_str());
-	
-	//PDFのファイル一覧を書き出す
-	//for (const auto& pdfFile : pdfFiles) {
-	//	std::wstring wstr = pdfFile;
-	//	int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
-	//	std::string str(size_needed, 0);
-	//	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], size_needed, nullptr, nullptr);
-	//	ImGui::Text("%s", str.c_str());
-	//}
 
 	// CSVファイルを開く
 	if (ImGui::Button("Open CSV")) {
@@ -97,7 +93,7 @@ void MainControl::Draw()
 	}
 	ImGui::Text(u8"Currently opened CSV: %s", Utility::EncodeGarble(m_CSVPath).c_str());
 
-	ImGui::Checkbox("Show Score Popup", &m_showScorePopup);
+	ImGui::Text("Columns to Edit");
 
 	ImGui::End();
 
@@ -106,5 +102,5 @@ void MainControl::Draw()
 }
 
 MainControl::MainControl(PDFManager* pdfManager) : m_PDFManager(pdfManager) {
-	m_CSVManager = new CSVManager(pdfManager, [this](std::string studentID) { RequestDrawPdf(studentID); }, &m_showScorePopup);
+	m_CSVManager = new CSVManager(pdfManager, [this](std::string studentID) { RequestDrawPdf(studentID); });
 }

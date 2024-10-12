@@ -29,7 +29,14 @@ bool CSVManager::LoadCSV(std::string filePath)
 			std::string rRole = row[0];
 			if (rRole != "履修生") continue;
 
-			m_studentIDtoRowIdx[row[2]] = i;
+			StudentInfo newStudent;
+			for (int i = 0; i < row.size(); ++i) {
+				newStudent.SetStudentInfo(m_columnNames[i], row[i]);
+			}
+			std::string studentID = newStudent.GetStudentInfo("# 学籍番号");
+
+			m_studentIDtoRowIdx[studentID] = i;
+			/*
 			std::string studentUserID = row[1];
 			std::string studentID = row[2];
 			std::string studentName = row[3];
@@ -60,7 +67,8 @@ bool CSVManager::LoadCSV(std::string filePath)
 				//fileName2,
 				//fileName3
 			);
-			m_studentIDtoInfo.emplace(studentID, studentInfo);
+			*/
+			m_studentIDtoInfo.emplace(studentID, newStudent);
 		}
 	}
 	catch (const std::exception& e) {
@@ -80,7 +88,7 @@ bool CSVManager::LoadCSV(std::string filePath)
 void CSVManager::UpdatePDFPreview(int i) {
 	if (m_callback) {
 		auto& [studentID, studentInfo] = *std::next(m_studentIDtoInfo.begin(), i);
-		m_callback(studentInfo.GetStudentID());
+		//m_callback(studentInfo.GetStudentID());
 		m_currentStudent = &studentInfo;
 	}
 }
@@ -130,34 +138,34 @@ void CSVManager::DrawTable() {
 			}
 			ImGui::PopID();
 
-			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetStudentUserID().c_str());
-			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetStudentID().c_str());
-			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetStudentName().c_str());
-			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetStudentNameEn().c_str());
-			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetStudentEmail().c_str());
-			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetStudentTotalScore().c_str());
-			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetStudentEvaluation().c_str());
-			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetStudentComment().c_str());
-			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetSubmissionStatus().c_str());
-			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetSubmissionDate().c_str());
-			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetSubmissionCount().c_str());
-			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetFileName1().c_str());
-			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetFileName2().c_str());
-			ImGui::TableNextColumn();
-			ImGui::Text(studentInfo.GetFileName3().c_str());
+			//ImGui::TableNextColumn();
+			//ImGui::Text(studentInfo.GetStudentUserID().c_str());
+			//ImGui::TableNextColumn();
+			//ImGui::Text(studentInfo.GetStudentID().c_str());
+			//ImGui::TableNextColumn();
+			//ImGui::Text(studentInfo.GetStudentName().c_str());
+			//ImGui::TableNextColumn();
+			//ImGui::Text(studentInfo.GetStudentNameEn().c_str());
+			//ImGui::TableNextColumn();
+			//ImGui::Text(studentInfo.GetStudentEmail().c_str());
+			//ImGui::TableNextColumn();
+			//ImGui::Text(studentInfo.GetStudentTotalScore().c_str());
+			//ImGui::TableNextColumn();
+			//ImGui::Text(studentInfo.GetStudentEvaluation().c_str());
+			//ImGui::TableNextColumn();
+			//ImGui::Text(studentInfo.GetStudentComment().c_str());
+			//ImGui::TableNextColumn();
+			//ImGui::Text(studentInfo.GetSubmissionStatus().c_str());
+			//ImGui::TableNextColumn();
+			//ImGui::Text(studentInfo.GetSubmissionDate().c_str());
+			//ImGui::TableNextColumn();
+			//ImGui::Text(studentInfo.GetSubmissionCount().c_str());
+			//ImGui::TableNextColumn();
+			//ImGui::Text(studentInfo.GetFileName1().c_str());
+			//ImGui::TableNextColumn();
+			//ImGui::Text(studentInfo.GetFileName2().c_str());
+			//ImGui::TableNextColumn();
+			//ImGui::Text(studentInfo.GetFileName3().c_str());
 		}
 		ImGui::EndTable();
 	}
@@ -177,12 +185,12 @@ void CSVManager::DrawScorePopup() {
 	ImGui::Begin("Score Popup");
 
 	if (m_currentStudent) {
-		int currScore = std::stoi(m_currentStudent->GetStudentTotalScore());
-		if (ImGui::InputInt("Score", &currScore)) {
-			auto& [studentID, studentInfo] = *std::next(m_studentIDtoInfo.begin(), m_selectedPDF);
-			studentInfo.SetStudentTotalScore(std::to_string(currScore));
-			UpdateScore(studentID, std::to_string(currScore));
-		}
+		//int currScore = std::stoi(m_currentStudent->GetStudentTotalScore());
+		//if (ImGui::InputInt("Score", &currScore)) {
+		//	auto& [studentID, studentInfo] = *std::next(m_studentIDtoInfo.begin(), m_selectedPDF);
+		//	studentInfo.SetStudentTotalScore(std::to_string(currScore));
+		//	UpdateScore(studentID, std::to_string(currScore));
+		//}
 
 		if (ImGui::Button("Previous")) {
 			PickPreviousStudent();
@@ -201,8 +209,7 @@ void CSVManager::DrawScorePopup() {
 
 void CSVManager::Draw() {
 	DrawTable();
-	if (*m_showScorePopup)
-		DrawScorePopup();
+	DrawScorePopup();
 }
 
 

@@ -10,7 +10,7 @@
 class CSVManager
 {
 public:
-	CSVManager(PDFManager* pdfManager, std::function<void(std::string)> callback, bool* showScorePopup) : m_PDFManager(pdfManager), m_callback(callback), m_showScorePopup(showScorePopup) {};
+	CSVManager(PDFManager* pdfManager, std::function<void(std::string)> callback) : m_PDFManager(pdfManager), m_callback(callback) {};
 	~CSVManager();
 	bool LoadCSV(std::string filePath);
 	std::vector<std::string> GetColumnNames();
@@ -33,7 +33,6 @@ private:
 	bool UpdateScore(std::string studentID, std::string newScore);
 
 	void UpdatePDFPreview(int i);
-	bool* m_showScorePopup = nullptr;
 
 	//! 現在選択中のラジオボタンのインデックス(0から)
 	std::unordered_map<std::string, StudentInfo> m_studentIDtoInfo;
